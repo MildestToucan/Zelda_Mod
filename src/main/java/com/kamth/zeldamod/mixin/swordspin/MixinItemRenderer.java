@@ -1,6 +1,5 @@
 package com.kamth.zeldamod.mixin.swordspin;
 
-import com.kamth.zeldamod.ZeldaMod;
 import com.kamth.zeldamod.custom.ModTags;
 import com.kamth.zeldamod.enchantments.ZeldaEnchantments;
 import com.kamth.zeldamod.util.interfaces.mixin.SwordSpinPlayerData;
@@ -25,13 +24,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 // Added here with explicit permission by the original owner.
 
 @Mixin(ItemRenderer.class)
-public class MixinItemRenderer {
+abstract class MixinItemRenderer {
 
     @Inject(method = "render",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/renderer/entity/ItemRenderer;renderModelLists(Lnet/minecraft/client/resources/model/BakedModel;Lnet/minecraft/world/item/ItemStack;IILcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;)V",
-                    shift = At.Shift.BEFORE
+                    target = "Lnet/minecraft/client/renderer/entity/ItemRenderer;renderModelLists(Lnet/minecraft/client/resources/model/BakedModel;Lnet/minecraft/world/item/ItemStack;IILcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;)V"
             )
     )
     private void onRenderBefore(ItemStack pItemStack, ItemDisplayContext pDisplayContext, boolean pLeftHand, PoseStack pPoseStack, MultiBufferSource pBuffer, int pCombinedLight, int pCombinedOverlay, BakedModel pModel, CallbackInfo ci) {
@@ -68,5 +66,4 @@ public class MixinItemRenderer {
             pPoseStack.translate(-0.5, -0.5, -0.5);
         }
     }
-
 }
