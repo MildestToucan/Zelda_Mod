@@ -3,10 +3,10 @@ package com.kamth.zeldamod.mixin;
 
 
 import com.kamth.zeldamod.custom.ModTags;
-import com.kamth.zeldamod.enchantments.ZeldaEnchantments;
 import com.kamth.zeldamod.item.items.grapples.ClawshotItem;
 import com.kamth.zeldamod.item.items.movement.AscendItem;
 import com.kamth.zeldamod.item.masks.transformation.ZoraMask;
+import com.kamth.zeldamod.util.HelperMethods;
 import com.kamth.zeldamod.util.interfaces.mixin.SwordSpinPlayerData;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.PlayerModel;
@@ -15,7 +15,6 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -83,9 +82,7 @@ abstract class MixinPlayerModel extends HumanoidModel<LivingEntity> {
 
         // Sword Spinning Animation
 
-        boolean hasSwordSpin = EnchantmentHelper.getItemEnchantmentLevel(ZeldaEnchantments.SWORD_SPIN.get(), mainHand) > 0;
-
-        if (entity instanceof Player player && hasSwordSpin) {
+        if (entity instanceof Player player && HelperMethods.hasSwordSpin(mainHand)) {
 
 
             SwordSpinPlayerData playerData = (SwordSpinPlayerData) player;

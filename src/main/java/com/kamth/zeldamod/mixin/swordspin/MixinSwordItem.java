@@ -1,7 +1,7 @@
 package com.kamth.zeldamod.mixin.swordspin;
 
 import com.kamth.zeldamod.custom.ModTags;
-import com.kamth.zeldamod.enchantments.ZeldaEnchantments;
+import com.kamth.zeldamod.util.HelperMethods;
 import com.kamth.zeldamod.util.interfaces.mixin.SwordSpinPlayerData;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -10,7 +10,6 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SwordItem;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -45,12 +44,9 @@ public class MixinSwordItem extends MixinItem {
 
     @Override
     protected void useSword(Level pLevel, Player pPlayer, InteractionHand pUsedHand, CallbackInfoReturnable<InteractionResultHolder<ItemStack>> cir) {
-        boolean hasSwordSpin = EnchantmentHelper.getItemEnchantmentLevel(ZeldaEnchantments.SWORD_SPIN.get(), pPlayer.getItemInHand(pUsedHand)) > 0;
-        boolean isSwordSpin = pPlayer.getUseItem().is(ModTags.Items.SPIN_ATTACK_SWORDS);
-        ItemStack itemstack = pPlayer.getItemInHand(pUsedHand);
+        ItemStack itemStack = pPlayer.getItemInHand(pUsedHand);
 
-
-        if (hasSwordSpin && pPlayer.isCrouching() && pUsedHand == InteractionHand.MAIN_HAND
+        if (HelperMethods.hasSwordSpin(itemStack) && pPlayer.isCrouching() && pUsedHand == InteractionHand.MAIN_HAND
                 && !((SwordSpinPlayerData) pPlayer).zeldamod$isSwordSpinActive()) {
 
             pPlayer.startUsingItem(pUsedHand);
@@ -58,15 +54,13 @@ public class MixinSwordItem extends MixinItem {
             if (!pLevel.isClientSide()) {
                 pPlayer.playNotifySound(SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.PLAYERS, 1, 1);
             }
-            cir.setReturnValue(InteractionResultHolder.consume(itemstack));
+            cir.setReturnValue(InteractionResultHolder.consume(itemStack));
         }
     }
 
     @Override
     protected void useDuration(ItemStack pStack, CallbackInfoReturnable<Integer> cir) {
-        boolean hasSwordSpin = EnchantmentHelper.getItemEnchantmentLevel(ZeldaEnchantments.SWORD_SPIN.get(), pStack) > 0;
-
-        if (hasSwordSpin || pStack.is(ModTags.Items.SPIN_ATTACK_SWORDS)) {
+        if (HelperMethods.hasSwordSpin(pStack) || pStack.is(ModTags.Items.SPIN_ATTACK_SWORDS)) {
             cir.setReturnValue(72000);
         }
     }

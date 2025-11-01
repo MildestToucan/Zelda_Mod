@@ -1,7 +1,7 @@
 package com.kamth.zeldamod.mixin.swordspin;
 
 import com.kamth.zeldamod.custom.ModTags;
-import com.kamth.zeldamod.enchantments.ZeldaEnchantments;
+import com.kamth.zeldamod.util.HelperMethods;
 import com.kamth.zeldamod.util.interfaces.mixin.SwordSpinPlayerData;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
@@ -14,7 +14,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SwordItem;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -37,9 +36,7 @@ abstract class MixinItemRenderer {
         Player player = Minecraft.getInstance().player;
         SwordSpinPlayerData playerData = ((SwordSpinPlayerData) player);
 
-        boolean hasSwordSpin = EnchantmentHelper.getItemEnchantmentLevel(ZeldaEnchantments.SWORD_SPIN.get(), pItemStack) > 0;
-
-        if (item instanceof SwordItem && hasSwordSpin ||
+        if (item instanceof SwordItem && HelperMethods.hasSwordSpin(pItemStack) ||
             pItemStack.is(ModTags.Items.SPIN_ATTACK_SWORDS)) {
             pPoseStack.translate(0.5, 0.5, 0.5);
 

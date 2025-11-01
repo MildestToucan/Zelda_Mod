@@ -2,22 +2,27 @@ package com.kamth.zeldamod.mixin;
 
 
 import com.kamth.zeldamod.item.items.bags.QuiverItem;
+import com.kamth.zeldamod.util.HelperMethods;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ProjectileWeaponItem;
+import net.minecraft.world.item.Vanishable;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.Optional;
 
 @Mixin (CrossbowItem.class)
-abstract class MixinCrossbowItem {
+abstract class MixinCrossbowItem extends ProjectileWeaponItem implements Vanishable {
+    public MixinCrossbowItem(Properties pProperties) {
+        super(pProperties);
+    }
+
     @Inject(
             method = "releaseUsing", at = @At(
             value = "INVOKE",
@@ -26,7 +31,7 @@ abstract class MixinCrossbowItem {
             cancellable = true)
     private void releaseUsing(ItemStack stack, Level world, LivingEntity entity, int remainingUseTicks, CallbackInfo ci) {
         if (entity instanceof Player user) {
-            ItemStack quiverStack = zeldamod$findQuiver(user);
+            ItemStack quiverStack = HelperMethods.findQuiver(user);
             if (quiverStack != null) {
                 QuiverItem quiver = (QuiverItem) quiverStack.getItem();
                 Optional<ItemStack> arrowStack = quiver.getFirstItem(quiverStack);
@@ -40,15 +45,15 @@ abstract class MixinCrossbowItem {
         }
     }
 
-    @Unique
-    private ItemStack zeldamod$findQuiver(Player player) {
-
-        for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
-            ItemStack stack = player.getInventory().getItem(i);
-            if (stack.getItem() instanceof QuiverItem) {
-                return stack;
-            }
-        }
-        return null;
-    }
+    // Replaced by HelpMethods method.
+//    @Unique
+//    private ItemStack zeldamod$findQuiver(Player player) {
+//        for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
+//            ItemStack stack = player.getInventory().getItem(i);
+//            if (stack.getItem() instanceof QuiverItem) {
+//                return stack;
+//            }
+//        }
+//        return null;
+//    }
 }
