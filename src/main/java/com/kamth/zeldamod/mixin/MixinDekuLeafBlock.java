@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(BigDripleafBlock.class)
-public abstract class MixinDekuLeafBlock extends Block {
+abstract class MixinDekuLeafBlock extends Block {
 
 
     public MixinDekuLeafBlock(Properties pProperties) {
@@ -23,16 +23,11 @@ public abstract class MixinDekuLeafBlock extends Block {
     }
 
     @Inject(at = @At("HEAD"), method = "entityInside", cancellable = true)
-    public void entityInside(BlockState pState, Level pLevel, BlockPos pPos, Entity pEntity, CallbackInfo ci) {
-        Entity Player = pEntity;
-        Entity entity = Player;
-
-        if (entity instanceof LivingEntity) {
-            if (((LivingEntity) entity).getItemBySlot(EquipmentSlot.HEAD).getItem() == ZeldaItems.DEKU_MASK.get()) {
+    private void entityInside(BlockState pState, Level pLevel, BlockPos pPos, Entity pEntity, CallbackInfo ci) {
+        if (pEntity instanceof LivingEntity livingEntity) {
+            if (livingEntity.getItemBySlot(EquipmentSlot.HEAD).getItem() == ZeldaItems.DEKU_MASK.get()) {
                 ci.cancel();
             }
-
-
         }
     }
 }

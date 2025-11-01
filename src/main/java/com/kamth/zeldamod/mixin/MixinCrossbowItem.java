@@ -17,20 +17,16 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import java.util.Optional;
 
 @Mixin (CrossbowItem.class)
-public class MixinCrossbowItem {
+abstract class MixinCrossbowItem {
     @Inject(
             method = "releaseUsing", at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/level/Level;playSound(Lnet/minecraft/world/entity/player/Player;DDDLnet/minecraft/sounds/SoundEvent;Lnet/minecraft/sounds/SoundSource;FF)V",
             shift = At.Shift.AFTER),
-            locals = LocalCapture.CAPTURE_FAILEXCEPTION,
             cancellable = true)
-
-
     private void releaseUsing(ItemStack stack, Level world, LivingEntity entity, int remainingUseTicks, CallbackInfo ci) {
-
         if (entity instanceof Player user) {
-            ItemStack quiverStack = findQuiver(user);
+            ItemStack quiverStack = zeldamod$findQuiver(user);
             if (quiverStack != null) {
                 QuiverItem quiver = (QuiverItem) quiverStack.getItem();
                 Optional<ItemStack> arrowStack = quiver.getFirstItem(quiverStack);
@@ -45,7 +41,7 @@ public class MixinCrossbowItem {
     }
 
     @Unique
-    private ItemStack findQuiver(Player player) {
+    private ItemStack zeldamod$findQuiver(Player player) {
 
         for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
             ItemStack stack = player.getInventory().getItem(i);

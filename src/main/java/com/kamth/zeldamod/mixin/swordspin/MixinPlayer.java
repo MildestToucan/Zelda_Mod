@@ -2,10 +2,10 @@ package com.kamth.zeldamod.mixin.swordspin;
 
 import com.kamth.zeldamod.enchantments.SwordSpin;
 import com.kamth.zeldamod.util.interfaces.mixin.SwordSpinPlayerData;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -16,40 +16,36 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 // Added here with explicit permission by the original owner.
 
 @Mixin(Player.class)
-public class MixinPlayer implements SwordSpinPlayerData {
+abstract class MixinPlayer extends LivingEntity implements SwordSpinPlayerData {
 
     @Unique
-    private boolean legendaryArmory$swordSwinging;
+    private boolean zeldamod$swordSwinging;
 
     @Unique
-    private int legendaryArmory$swordspinTicks;
+    private int zeldamod$swordspinTicks;
+
+    @Override
+    public void zeldamod$setSwordSpinActive(boolean bl) {
+        this.zeldamod$swordSwinging = bl;
+    }
+
+    @Override
+    public boolean zeldamod$isSwordSpinActive() {
+        return this.zeldamod$swordSwinging;
+    }
+
+    protected MixinPlayer(EntityType<? extends LivingEntity> pEntityType, Level pLevel) {
+        super(pEntityType, pLevel);
+    }
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void onInit(CallbackInfo ci) {
-        this.legendaryArmory$swordspinTicks = 0;
-        this.legendaryArmory$swordSwinging = false;
-    }
-
-    @Unique
-    private Player legendaryArmory$self() {
-        return (Player) (Object) this;
+        this.zeldamod$swordspinTicks = 0;
+        this.zeldamod$swordSwinging = false;
     }
 
     @Inject(method = "tick", at = @At("HEAD"))
-    public void tick(CallbackInfo ci) {
-        Player player = legendaryArmory$self();
-
-        this.legendaryArmory$swordspinTicks = SwordSpin.doSwordSpin(player, this.legendaryArmory$swordspinTicks, legendaryArmory$isSwordSpinActive());
-    }
-
-
-    @Override
-    public void legendaryArmory$setSwordSpinActive(boolean bl) {
-        this.legendaryArmory$swordSwinging = bl;
-    }
-    
-    @Override
-    public boolean legendaryArmory$isSwordSpinActive() {
-        return this.legendaryArmory$swordSwinging;
+    public void onTick(CallbackInfo ci) {
+        this.zeldamod$swordspinTicks = SwordSpin.doSwordSpin((Player) (Object) this, this.zeldamod$swordspinTicks, zeldamod$isSwordSpinActive());
     }
 }

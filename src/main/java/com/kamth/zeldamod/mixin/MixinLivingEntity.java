@@ -23,7 +23,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LivingEntity.class)
-public abstract class MixinLivingEntity {
+abstract class MixinLivingEntity {
 
     // TODO: Fix gravity things
 
@@ -34,7 +34,7 @@ public abstract class MixinLivingEntity {
     @Shadow public abstract boolean addEffect(MobEffectInstance pEffectInstance);
 
     @Unique
-    private LivingEntity zeldamod_getLivingEntity() {
+    private LivingEntity zeldamod$getLivingEntity() {
         return (LivingEntity) (Object) this;
     }
 
@@ -65,10 +65,10 @@ public abstract class MixinLivingEntity {
 
     @Inject(method = "getBlockSpeedFactor", at = @At("HEAD"), cancellable = true)
     private void onGetBlockSpeedFactor(CallbackInfoReturnable<Float> cir) {
-        if (zeldamod_getLivingEntity().getItemBySlot(EquipmentSlot.FEET).getItem() == ZeldaItems.HOVER_BOOTS.get()) {
+        if (zeldamod$getLivingEntity().getItemBySlot(EquipmentSlot.FEET).getItem() == ZeldaItems.HOVER_BOOTS.get()) {
             cir.setReturnValue(.96F);
         }
-        if (zeldamod_getLivingEntity().getItemBySlot(EquipmentSlot.HEAD).getItem() == ZeldaItems.GORON_MASK.get()) {
+        if (zeldamod$getLivingEntity().getItemBySlot(EquipmentSlot.HEAD).getItem() == ZeldaItems.GORON_MASK.get()) {
             cir.setReturnValue(.97F);
         }
     }

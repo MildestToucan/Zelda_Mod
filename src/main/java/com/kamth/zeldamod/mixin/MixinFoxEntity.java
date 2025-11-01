@@ -20,7 +20,7 @@ abstract class MixinFoxEntity extends Animal {
     }
 
     @ModifyReturnValue(method = "trusts", at = @At("RETURN"))
-    private boolean trustWhenWearingKeatonMask(boolean original, UUID uuid) {
+    private boolean trustKeatonMask(boolean original, UUID uuid) {
         Player player = this.level().getPlayerByUUID(uuid);
         return original || (player != null && player.getItemBySlot(EquipmentSlot.HEAD).getItem() == ZeldaItems.KEATON_MASK.get());
     }

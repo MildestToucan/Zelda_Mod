@@ -18,17 +18,14 @@ import java.util.function.Predicate;
 //Credits to DeadlyDiamond98 for this code!
 
 @Mixin (ProjectileWeaponItem.class)
-public class MixinProjectileWeaponItem {
+abstract class MixinProjectileWeaponItem {
     @Inject(method = "getHeldProjectile", at = @At("HEAD"), cancellable = true)
     private static void getArrowFromQuiver(LivingEntity entity, Predicate<ItemStack> predicate, CallbackInfoReturnable<ItemStack> cir) {
-        if (entity instanceof Player) {
-            Player player = (Player) entity;
-
-
+        if (entity instanceof Player player) {
             for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
                 ItemStack stack = player.getInventory().getItem(i);
                 if (stack.getItem() instanceof QuiverItem) {
-                    handleQuiver(stack, cir);
+                    zeldamod$handleQuiver(stack, cir);
                     if (cir.getReturnValue() != null) {
                         return;
                     }
@@ -38,7 +35,7 @@ public class MixinProjectileWeaponItem {
     }
 
     @Unique
-    private static void handleQuiver(ItemStack stack, CallbackInfoReturnable<ItemStack> cir) {
+    private static void zeldamod$handleQuiver(ItemStack stack, CallbackInfoReturnable<ItemStack> cir) {
         QuiverItem customBundle = (QuiverItem) stack.getItem();
         Optional<ItemStack> arrowStack = customBundle.getFirstItem(stack);
         if (arrowStack.isPresent()) {

@@ -9,7 +9,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ShieldItem;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
@@ -52,7 +51,7 @@ public class MixinSwordItem extends MixinItem {
 
 
         if (hasSwordSpin && pPlayer.isCrouching() && pUsedHand == InteractionHand.MAIN_HAND
-                && !((SwordSpinPlayerData) pPlayer).legendaryArmory$isSwordSpinActive()) {
+                && !((SwordSpinPlayerData) pPlayer).zeldamod$isSwordSpinActive()) {
 
             pPlayer.startUsingItem(pUsedHand);
 

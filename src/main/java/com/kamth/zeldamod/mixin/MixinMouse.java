@@ -16,10 +16,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(MouseHandler.class)
-public class MixinMouse {
-    @Shadow
-    @Final
-    private Minecraft minecraft;
+abstract class MixinMouse {
+    @Shadow @Final private Minecraft minecraft;
 
     @Shadow @Final private SmoothDouble smoothTurnX;
 

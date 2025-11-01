@@ -5,55 +5,64 @@ import com.kamth.zeldamod.item.items.bags.BombBagItem;
 import com.kamth.zeldamod.item.items.bags.CustomBundleItem;
 import com.kamth.zeldamod.item.items.bags.QuiverItem;
 import com.kamth.zeldamod.item.items.bags.WalletItem;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.stats.Stats;
+import net.minecraft.world.Container;
+import net.minecraft.world.Nameable;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin (Inventory.class)
-public class MixinInventory {
+abstract class MixinInventory implements Container, Nameable {
 
-    @Inject(method = "add(Lnet/minecraft/world/item/ItemStack;)Z", at = @At("HEAD"), cancellable = true)
-    public void addStack(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
-        Player player = ((Inventory) (Object) this).player;
+    @Shadow
+    @Final
+    public Player player;
+
+    // We use ModifyReturnValue to avoid cancelling another mod's injected operations accidentally, since we only care
+    // about changing the return value.
+    @ModifyReturnValue(method = "add(Lnet/minecraft/world/item/ItemStack;)Z", at = @At("RETURN"))
+    private boolean tryBaggingStack(boolean original, ItemStack stack) {
         if (stack.is(ModTags.Items.BOW_AMMO)) {
-            if (addItemToBag(player, stack, QuiverItem.class, cir)) {
-                cir.setReturnValue(true);
-                cir.cancel();
+            if (zeldamod$addItemToBag(this.player, stack, QuiverItem.class)) {
+                return true;
             }
         }
-        if (stack.is(ModTags.Items.GEMS)) {
-            if (addItemToBag(player, stack, WalletItem.class, cir)) {
-                cir.setReturnValue(true);
-                cir.cancel();
+        else if (stack.is(ModTags.Items.GEMS)) {
+            if (zeldamod$addItemToBag(this.player, stack, WalletItem.class)) {
+                return true;
             }
         }
         else if (stack.is(ModTags.Items.BOMBS)) {
-            if (addItemToBag(player, stack, BombBagItem.class, cir)) {
-                cir.setReturnValue(true);
-                cir.cancel();
+            if (zeldamod$addItemToBag(this.player, stack, BombBagItem.class)) {
+                return true;
             }
         }
+        return original;
     }
 
 
-    @Unique
-    private <T extends CustomBundleItem> boolean addItemToBag(Player player, ItemStack itemStack,
-                                                          Class<T> itemClass, CallbackInfo cir) {
 
+
+    // Removed the unused CallbackInfoReturnable<Boolean> parameter.
+    @Unique
+    private <T extends CustomBundleItem> boolean zeldamod$addItemToBag(Player player,
+                                                                              ItemStack itemStack,
+                                                                              Class<T> itemClass) {
         for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
-            ItemStack stack = player.getInventory().getItem(i);
-            if (itemClass.isInstance(stack.getItem())) {
-                T customBundle = (T) stack.getItem();
+            // Renamed this variable to prevent confusion with the itemStack param.
+            ItemStack stackAti = player.getInventory().getItem(i);
+            if (itemClass.isInstance(stackAti.getItem())) {
+                T customBundle = (T) stackAti.getItem();
                 if (customBundle.getBarWidth(customBundle.getDefaultInstance()) < 13) {
-                    int added = customBundle.addToBundle(stack, itemStack);
+                    int added = customBundle.addToBundle(stackAti, itemStack);
                     if (added > 0) {
                         itemStack.shrink(added);
                         if (itemStack.isEmpty()) {
@@ -69,4 +78,24 @@ public class MixinInventory {
         return false;
     }
 
+    // Replaced by tryBaggingStacks
+    // cir.cancel() calls removed because setReturnValue already cancels
+//    @Inject(method = "add(Lnet/minecraft/world/item/ItemStack;)Z", at = @At("HEAD"), cancellable = true)
+//    private void addStack(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
+//        if (stack.is(ModTags.Items.BOW_AMMO)) {
+//            if (zeldamod$addItemToBag(this.player, stack, QuiverItem.class)) {
+//                cir.setReturnValue(true);
+//            }
+//        }
+//        else if (stack.is(ModTags.Items.GEMS)) {
+//            if (zeldamod$addItemToBag(this.player, stack, WalletItem.class)) {
+//                cir.setReturnValue(true);
+//            }
+//        }
+//        else if (stack.is(ModTags.Items.BOMBS)) {
+//            if (zeldamod$addItemToBag(this.player, stack, BombBagItem.class)) {
+//                cir.setReturnValue(true);
+//            }
+//        }
+//    }
 }
