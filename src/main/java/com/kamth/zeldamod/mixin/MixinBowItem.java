@@ -21,7 +21,7 @@ import java.util.Optional;
 @Mixin(BowItem.class)
 abstract class MixinBowItem {
     @Unique
-    private Item getItem() {
+    private Item zeldamod$getItem() {
         return (Item) (Object) this;
     }
     @Inject(
@@ -34,7 +34,7 @@ abstract class MixinBowItem {
 
     private void releaseUsing(ItemStack stack, Level world, LivingEntity entity, int remainingUseTicks, CallbackInfo ci,
                               Player user, boolean bl, ItemStack itemStack, int i, float f) {
-        ItemStack quiverStack = findQuiver(user);
+        ItemStack quiverStack = zeldamod$findQuiver(user);
         if (quiverStack != null) {
             QuiverItem quiver = (QuiverItem) quiverStack.getItem();
             Optional<ItemStack> arrowStack = quiver.getFirstItem(quiverStack);
@@ -42,13 +42,13 @@ abstract class MixinBowItem {
                 if (!user.getAbilities().instabuild) {
                     quiver.removeOneItem(quiverStack, arrowStack.get().getItem());
                 }
-                user.awardStat(Stats.ITEM_USED.get(getItem()));
+                user.awardStat(Stats.ITEM_USED.get(zeldamod$getItem()));
                 ci.cancel();
             }
         }
     }
     @Unique
-    private ItemStack findQuiver(Player player) {
+    private ItemStack zeldamod$findQuiver(Player player) {
 
         for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
             ItemStack stack = player.getInventory().getItem(i);

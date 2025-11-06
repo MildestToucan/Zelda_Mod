@@ -23,7 +23,7 @@ abstract class MixinDekuLeafBlock extends Block {
     }
 
     @Inject(at = @At("HEAD"), method = "entityInside", cancellable = true)
-    public void entityInside(BlockState pState, Level pLevel, BlockPos pPos, Entity pEntity, CallbackInfo ci) {
+    private void entityInside(BlockState pState, Level pLevel, BlockPos pPos, Entity pEntity, CallbackInfo ci) {
         Entity Player = pEntity;
         Entity entity = Player;
 

@@ -6,8 +6,6 @@ import com.kamth.zeldamod.custom.ModTags;
 import com.kamth.zeldamod.enchantments.ZeldaEnchantments;
 import com.kamth.zeldamod.item.items.grapples.ClawshotItem;
 import com.kamth.zeldamod.item.items.movement.AscendItem;
-import com.kamth.zeldamod.item.items.movement.DekuLeafItem;
-import com.kamth.zeldamod.item.items.movement.GliderItem;
 import com.kamth.zeldamod.item.masks.transformation.ZoraMask;
 import com.kamth.zeldamod.util.interfaces.mixin.SwordSpinPlayerData;
 import net.minecraft.client.model.HumanoidModel;
@@ -27,7 +25,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(PlayerModel.class)
 abstract class MixinPlayerModel extends HumanoidModel<LivingEntity> {
     @Unique
-    private static final float ARM_ROTATION = (float) (Math.PI * 2 - 2.9);
+    private static final float zeldamod$ARM_ROTATION = (float) (Math.PI * 2 - 2.9);
 
     public MixinPlayerModel(ModelPart part){
         super(part);
@@ -49,21 +47,21 @@ abstract class MixinPlayerModel extends HumanoidModel<LivingEntity> {
         ItemStack offHand = entity.getOffhandItem();
 
         if (head.getItem() instanceof ZoraMask && entity.isSwimming()) {
-            leftArm.xRot = ARM_ROTATION;
+            leftArm.xRot = zeldamod$ARM_ROTATION;
             leftArm.zRot = 34.5f;
-            rightArm.xRot = ARM_ROTATION;
+            rightArm.xRot = zeldamod$ARM_ROTATION;
             rightArm.zRot = -34.5f;
         }
 
         if (mainHand.getItem() instanceof AscendItem && entity.isUsingItem()) {
-            rightArm.xRot = ARM_ROTATION;
+            rightArm.xRot = zeldamod$ARM_ROTATION;
             rightArm.zRot = 0;
         }
 
         if ((mainHand.is(ModTags.Items.GLIDERS) || offHand.is(ModTags.Items.GLIDERS)) && entity.isUsingItem()) {
-            leftArm.xRot = ARM_ROTATION;
+            leftArm.xRot = zeldamod$ARM_ROTATION;
             leftArm.zRot = 0;
-            rightArm.xRot = ARM_ROTATION;
+            rightArm.xRot = zeldamod$ARM_ROTATION;
             rightArm.zRot = 0;
         }
 
@@ -97,7 +95,7 @@ abstract class MixinPlayerModel extends HumanoidModel<LivingEntity> {
                 this.rightArm.yRot = -0.5235988F;
             }
 
-            if (playerData.legendaryArmory$isSwordSpinActive()) {
+            if (playerData.zeldamod$isSwordSpinActive()) {
                 this.rightArm.yRot = (-(float) Math.PI / 2) + this.body.yRot + 90;
                 this.rightArm.xRot = (-(float) Math.PI / 2) + this.head.xRot;
             }
@@ -112,7 +110,7 @@ abstract class MixinPlayerModel extends HumanoidModel<LivingEntity> {
                 this.rightArm.yRot = -0.5235988F;
             }
 
-            if (playerData.legendaryArmory$isSwordSpinActive()) {
+            if (playerData.zeldamod$isSwordSpinActive()) {
                 this.rightArm.yRot = (-(float) Math.PI / 2) + this.body.yRot + 90;
                 this.rightArm.xRot = (-(float) Math.PI / 2) + this.head.xRot;
             }

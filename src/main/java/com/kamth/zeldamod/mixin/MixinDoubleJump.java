@@ -20,9 +20,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(LocalPlayer.class)
 abstract class MixinDoubleJump extends AbstractClientPlayer {
     @Unique
-    private int jumps=0;
+    private int zeldamod$jumps = 0;
     @Unique
-    private boolean lastJumped=false;
+    private boolean zeldamod$lastJumped = false;
 
     public MixinDoubleJump(ClientLevel pClientLevel, GameProfile pGameProfile) {
         super(pClientLevel, pGameProfile);
@@ -32,27 +32,27 @@ abstract class MixinDoubleJump extends AbstractClientPlayer {
     @Inject(method = "aiStep()V", at = @At("HEAD"))
     private void doubleJump(CallbackInfo info) {
         LocalPlayer player = (LocalPlayer) (Object) this;
-        if (player.onGround() || player.onClimbable()) jumps = 1;
-        else if (!lastJumped && jumps > 0 && player.getDeltaMovement().y < 0) {
+        if (player.onGround() || player.onClimbable()) zeldamod$jumps = 1;
+        else if (!zeldamod$lastJumped && zeldamod$jumps > 0 && player.getDeltaMovement().y < 0) {
             if (player.input.jumping && !player.getAbilities().flying) {
-                if (canPerformJump(player)) {
+                if (zeldamod$canPerformJump(player)) {
 
-                    --jumps;
+                    --zeldamod$jumps;
                     player.jumpFromGround();
                     player.resetFallDistance();
                 }
             }
         }
-        lastJumped = player.input.jumping;
+        zeldamod$lastJumped = player.input.jumping;
     }
 
     @Unique
-    private boolean canPerformJump(LocalPlayer player) {
-        ItemStack itemStack = player.getItemBySlot(EquipmentSlot.MAINHAND);
-        ItemStack itemStack2 = player.getItemBySlot(EquipmentSlot.OFFHAND);
-        return  (itemStack.getItem() instanceof FeatherItem && !player.isFallFlying() && !player.isPassenger()
+    private boolean zeldamod$canPerformJump(LocalPlayer player) {
+        ItemStack mainHandStack = player.getItemBySlot(EquipmentSlot.MAINHAND);
+        ItemStack offHandStack = player.getItemBySlot(EquipmentSlot.OFFHAND);
+        return  (mainHandStack.getItem() instanceof FeatherItem && !player.isFallFlying() && !player.isPassenger()
                 && !player.isInWater() && !player.hasEffect(MobEffects.LEVITATION)
-                || itemStack2.getItem() instanceof FeatherItem && !player.isFallFlying() && !player.isPassenger()
+                || offHandStack.getItem() instanceof FeatherItem && !player.isFallFlying() && !player.isPassenger()
                 && !player.isInWater() && !player.hasEffect(MobEffects.LEVITATION));
     }
 

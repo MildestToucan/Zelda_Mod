@@ -1,6 +1,5 @@
 package com.kamth.zeldamod.mixin.swordspin;
 
-import com.kamth.zeldamod.ZeldaMod;
 import com.kamth.zeldamod.custom.ModTags;
 import com.kamth.zeldamod.enchantments.ZeldaEnchantments;
 import com.kamth.zeldamod.util.interfaces.mixin.SwordSpinPlayerData;
@@ -50,12 +49,12 @@ abstract class MixinItemRenderer {
                 if (pDisplayContext.firstPerson()) {
                     float yRot = !player.isUsingItem() ? 90 : 0;
 
-                    if (player.isUsingItem() || playerData.legendaryArmory$isSwordSpinActive()) {
+                    if (player.isUsingItem() || playerData.zeldamod$isSwordSpinActive()) {
                         pPoseStack.mulPose(Axis.ZP.rotationDegrees(90));
                         pPoseStack.mulPose(Axis.YP.rotationDegrees(yRot));
                         pPoseStack.mulPose(Axis.XP.rotationDegrees(45));
                     }
-                } else if (pDisplayContext == ItemDisplayContext.THIRD_PERSON_RIGHT_HAND && playerData.legendaryArmory$isSwordSpinActive()) {
+                } else if (pDisplayContext == ItemDisplayContext.THIRD_PERSON_RIGHT_HAND && playerData.zeldamod$isSwordSpinActive()) {
 
                     pPoseStack.translate(-0.55, 0, 0);
 

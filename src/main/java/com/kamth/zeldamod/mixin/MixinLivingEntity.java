@@ -34,12 +34,13 @@ abstract class MixinLivingEntity {
     @Shadow public abstract boolean addEffect(MobEffectInstance pEffectInstance);
 
     @Unique
-    private LivingEntity zeldamod_getLivingEntity() {
+    private LivingEntity zeldamod$getLivingEntity() {
         return (LivingEntity) (Object) this;
     }
 
+    // When one of our gravity-affecting items is involved, set a special friction value.
     @WrapOperation(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;getFriction(Lnet/minecraft/world/level/LevelReader;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/entity/Entity;)F"))
-    private float onTravel(BlockState instance, LevelReader levelReader, BlockPos pos, Entity entity, Operation<Float> original) {
+    private float setSpecialFriction(BlockState instance, LevelReader levelReader, BlockPos pos, Entity entity, Operation<Float> original) {
         if (entity instanceof LivingEntity living && living.getItemBySlot(EquipmentSlot.FEET).getItem() == ZeldaItems.HOVER_BOOTS.get()) {
             return 1.05F;
         }
@@ -49,8 +50,9 @@ abstract class MixinLivingEntity {
         return original.call(instance, levelReader, pos, entity);
     }
 
+    // When one of our gravity-affecting items is involved, set a special gravity value.
     @ModifyVariable(method = "travel", at = @At("LOAD"), name = "d0", ordinal = 0)
-    public double inject3(double value) {
+    public double setSpecialGravity(double value) {
         if (this.getItemBySlot(EquipmentSlot.MAINHAND).is(ZeldaItems.ROC_FEATHER_2.get()) || this.getItemBySlot(EquipmentSlot.OFFHAND).is(ZeldaItems.ROC_FEATHER_2.get() )) {
             return 0.04;
         }
@@ -63,12 +65,13 @@ abstract class MixinLivingEntity {
         return value;
     }
 
+    // When one of our speed-affecting items is involved, set a special speed value.
     @Inject(method = "getBlockSpeedFactor", at = @At("HEAD"), cancellable = true)
-    private void onGetBlockSpeedFactor(CallbackInfoReturnable<Float> cir) {
-        if (zeldamod_getLivingEntity().getItemBySlot(EquipmentSlot.FEET).getItem() == ZeldaItems.HOVER_BOOTS.get()) {
+    private void setSpecialBlockSpeed(CallbackInfoReturnable<Float> cir) {
+        if (zeldamod$getLivingEntity().getItemBySlot(EquipmentSlot.FEET).getItem() == ZeldaItems.HOVER_BOOTS.get()) {
             cir.setReturnValue(.96F);
         }
-        if (zeldamod_getLivingEntity().getItemBySlot(EquipmentSlot.HEAD).getItem() == ZeldaItems.GORON_MASK.get()) {
+        if (zeldamod$getLivingEntity().getItemBySlot(EquipmentSlot.HEAD).getItem() == ZeldaItems.GORON_MASK.get()) {
             cir.setReturnValue(.97F);
         }
     }

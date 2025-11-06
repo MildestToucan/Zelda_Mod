@@ -21,22 +21,22 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 abstract class MixinInventory {
 
     @Inject(method = "add(Lnet/minecraft/world/item/ItemStack;)Z", at = @At("HEAD"), cancellable = true)
-    public void addStack(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
+    public void tryAddItemToBag(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
         Player player = ((Inventory) (Object) this).player;
         if (stack.is(ModTags.Items.BOW_AMMO)) {
-            if (addItemToBag(player, stack, QuiverItem.class, cir)) {
+            if (zeldamod$addItemToBag(player, stack, QuiverItem.class, cir)) {
                 cir.setReturnValue(true);
                 cir.cancel();
             }
         }
         if (stack.is(ModTags.Items.GEMS)) {
-            if (addItemToBag(player, stack, WalletItem.class, cir)) {
+            if (zeldamod$addItemToBag(player, stack, WalletItem.class, cir)) {
                 cir.setReturnValue(true);
                 cir.cancel();
             }
         }
         else if (stack.is(ModTags.Items.BOMBS)) {
-            if (addItemToBag(player, stack, BombBagItem.class, cir)) {
+            if (zeldamod$addItemToBag(player, stack, BombBagItem.class, cir)) {
                 cir.setReturnValue(true);
                 cir.cancel();
             }
@@ -45,8 +45,8 @@ abstract class MixinInventory {
 
 
     @Unique
-    private <T extends CustomBundleItem> boolean addItemToBag(Player player, ItemStack itemStack,
-                                                          Class<T> itemClass, CallbackInfo cir) {
+    private <T extends CustomBundleItem> boolean zeldamod$addItemToBag(Player player, ItemStack itemStack,
+                                                                       Class<T> itemClass, CallbackInfo cir) {
 
         for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
             ItemStack stack = player.getInventory().getItem(i);

@@ -55,7 +55,7 @@ public class SwordSpin extends Enchantment {
                     player.playNotifySound(SoundEvents.PLAYER_ATTACK_SWEEP, SoundSource.PLAYERS, 1, 1);
                 }
                 player.getCooldowns().addCooldown(player.getItemInHand(InteractionHand.MAIN_HAND).getItem(),30);
-                swordSpinPlayer.legendaryArmory$setSwordSpinActive(true);
+                swordSpinPlayer.zeldamod$setSwordSpinActive(true);
             }
             else {
                 swordspinTicks++;
@@ -63,7 +63,7 @@ public class SwordSpin extends Enchantment {
             }
 
             if (swordspinActive && swordspinTicks > 35) {
-                swordSpinPlayer.legendaryArmory$setSwordSpinActive(false);
+                swordSpinPlayer.zeldamod$setSwordSpinActive(false);
                 swordspinTicks = 0;
             }
 
@@ -71,7 +71,7 @@ public class SwordSpin extends Enchantment {
         }
         else {
             swordspinTicks = 0;
-            swordSpinPlayer.legendaryArmory$setSwordSpinActive(false);
+            swordSpinPlayer.zeldamod$setSwordSpinActive(false);
         }
 
         return swordspinTicks;

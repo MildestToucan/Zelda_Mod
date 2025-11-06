@@ -17,8 +17,7 @@ import java.util.UUID;
 
 
 @Mixin(Fox.class)
-abstract class MixinFoxEntity extends Animal
-{
+abstract class MixinFoxEntity extends Animal {
     // This constructor is fake and never used
     protected MixinFoxEntity()
     {
@@ -26,12 +25,10 @@ abstract class MixinFoxEntity extends Animal
     }
 
     @Inject(method = "trusts", at = @At("HEAD"), cancellable = true)
-    private void Trustmode(UUID uuid, CallbackInfoReturnable<Boolean> ci)
-    {
+    private void trustKeatonMask(UUID uuid, CallbackInfoReturnable<Boolean> ci) {
         Player player = level().getPlayerByUUID(uuid);
 
-        if (player != null && player.getItemBySlot(EquipmentSlot.HEAD).getItem() == ZeldaItems.KEATON_MASK.get())
-        {
+        if (player != null && player.getItemBySlot(EquipmentSlot.HEAD).getItem() == ZeldaItems.KEATON_MASK.get()) {
             ci.setReturnValue(true);
         }
     }

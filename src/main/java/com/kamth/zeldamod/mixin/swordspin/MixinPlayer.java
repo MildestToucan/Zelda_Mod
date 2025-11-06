@@ -2,9 +2,6 @@ package com.kamth.zeldamod.mixin.swordspin;
 
 import com.kamth.zeldamod.enchantments.SwordSpin;
 import com.kamth.zeldamod.util.interfaces.mixin.SwordSpinPlayerData;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -19,37 +16,37 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 abstract class MixinPlayer implements SwordSpinPlayerData {
 
     @Unique
-    private boolean legendaryArmory$swordSwinging;
+    private boolean zeldamod$swordSwinging;
 
     @Unique
-    private int legendaryArmory$swordspinTicks;
+    private int zeldamod$swordspinTicks;
 
     @Inject(method = "<init>", at = @At("TAIL"))
-    private void onInit(CallbackInfo ci) {
-        this.legendaryArmory$swordspinTicks = 0;
-        this.legendaryArmory$swordSwinging = false;
+    private void populateSwordFields(CallbackInfo ci) {
+        this.zeldamod$swordspinTicks = 0;
+        this.zeldamod$swordSwinging = false;
     }
 
     @Unique
-    private Player legendaryArmory$self() {
+    private Player zeldamod$self() {
         return (Player) (Object) this;
     }
 
     @Inject(method = "tick", at = @At("HEAD"))
     public void tick(CallbackInfo ci) {
-        Player player = legendaryArmory$self();
+        Player player = zeldamod$self();
 
-        this.legendaryArmory$swordspinTicks = SwordSpin.doSwordSpin(player, this.legendaryArmory$swordspinTicks, legendaryArmory$isSwordSpinActive());
+        this.zeldamod$swordspinTicks = SwordSpin.doSwordSpin(player, this.zeldamod$swordspinTicks, zeldamod$isSwordSpinActive());
     }
 
 
     @Override
-    public void legendaryArmory$setSwordSpinActive(boolean bl) {
-        this.legendaryArmory$swordSwinging = bl;
+    public void zeldamod$setSwordSpinActive(boolean bl) {
+        this.zeldamod$swordSwinging = bl;
     }
     
     @Override
-    public boolean legendaryArmory$isSwordSpinActive() {
-        return this.legendaryArmory$swordSwinging;
+    public boolean zeldamod$isSwordSpinActive() {
+        return this.zeldamod$swordSwinging;
     }
 }

@@ -4,6 +4,6 @@ package com.kamth.zeldamod.util.interfaces.mixin;
 // Added here with explicit permission by the original owner.
 
 public interface SwordSpinPlayerData {
-    void legendaryArmory$setSwordSpinActive(boolean bl);
-    boolean legendaryArmory$isSwordSpinActive();
+    void zeldamod$setSwordSpinActive(boolean bl);
+    boolean zeldamod$isSwordSpinActive();
 }

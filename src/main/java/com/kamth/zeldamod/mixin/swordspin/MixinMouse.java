@@ -1,6 +1,5 @@
 package com.kamth.zeldamod.mixin.swordspin;
 
-import com.kamth.zeldamod.enchantments.SwordSpin;
 import com.kamth.zeldamod.util.interfaces.mixin.SwordSpinPlayerData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
@@ -28,7 +27,7 @@ abstract class MixinMouse {
 
         SwordSpinPlayerData playerData = (SwordSpinPlayerData) this.minecraft.player;
 
-        if (this.minecraft.player != null && playerData.legendaryArmory$isSwordSpinActive()) {
+        if (this.minecraft.player != null && playerData.zeldamod$isSwordSpinActive()) {
             this.accumulatedDX = 0;
             this.accumulatedDY = 0;
         }

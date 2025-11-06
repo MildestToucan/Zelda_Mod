@@ -30,7 +30,7 @@ abstract class MixinCrossbowItem {
     private void releaseUsing(ItemStack stack, Level world, LivingEntity entity, int remainingUseTicks, CallbackInfo ci) {
 
         if (entity instanceof Player user) {
-            ItemStack quiverStack = findQuiver(user);
+            ItemStack quiverStack = zeldamod$findQuiver(user);
             if (quiverStack != null) {
                 QuiverItem quiver = (QuiverItem) quiverStack.getItem();
                 Optional<ItemStack> arrowStack = quiver.getFirstItem(quiverStack);
@@ -45,7 +45,7 @@ abstract class MixinCrossbowItem {
     }
 
     @Unique
-    private ItemStack findQuiver(Player player) {
+    private ItemStack zeldamod$findQuiver(Player player) {
 
         for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
             ItemStack stack = player.getInventory().getItem(i);
